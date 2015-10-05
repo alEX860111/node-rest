@@ -1,0 +1,16 @@
+{
+	"name": "node-rest",
+	"author": "alEX860111",
+	"description": "node-rest",
+	"version": "0.0.1",
+	"dependencies": {
+		"express": "4.13.x"
+	},
+	"devDependencies": {
+		"jasmine": "2.3.x",
+		"proxyquire": "1.7.x"
+	},
+	"scripts": {
+		"test": "node node_modules/jasmine/bin/jasmine"
+	}
+}
