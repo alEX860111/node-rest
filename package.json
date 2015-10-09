@@ -4,7 +4,9 @@
 	"description": "node-rest",
 	"version": "0.0.1",
 	"dependencies": {
-		"express": "4.13.x"
+		"body-parser": "1.14.x",
+		"express": "4.13.x",
+		"lodash": "3.10.x"
 	},
 	"devDependencies": {
 		"jasmine": "2.3.x",

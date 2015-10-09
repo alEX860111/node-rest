@@ -1,3 +1,5 @@
+var _ = require("lodash");
+
 var objects = {};
 
 var id = 0;
@@ -6,7 +8,7 @@ function createKey(id) {
 	return "id" + id;
 }
 
-exports.add = function(object) {
+exports.save = function(object) {
 	var key = createKey(id);
 	objects[key] = object;
 	return id++;
@@ -42,5 +44,5 @@ exports.remove = function(id) {
 	var key = createKey(id);
 	var returnObject = objects[key];
 	delete objects[key];
-	return returnObject;
+	return !_.isUndefined(returnObject);
 };
