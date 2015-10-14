@@ -6,7 +6,8 @@
 	"dependencies": {
 		"body-parser": "1.14.x",
 		"express": "4.13.x",
-		"lodash": "3.10.x"
+		"lodash": "3.10.x",
+		"mongodb": "2.0.x"
 	},
 	"devDependencies": {
 		"jasmine": "2.3.x",
