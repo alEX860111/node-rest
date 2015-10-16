@@ -1,8 +1,7 @@
 var ObjectID = require("mongodb").ObjectID;
-
 var databaseService = require("./databaseService");
-var database = databaseService.getDatabase();
 
+var database = databaseService.getDatabase();
 var collection = database.collection("products");
 
 module.exports.saveProduct = function(product) {
@@ -12,7 +11,7 @@ module.exports.saveProduct = function(product) {
 module.exports.getProduct = function(id) {
 	var objectID;
 	try {
-		objectID = ObjectID.createFromHexString(id)
+		objectID = ObjectID.createFromHexString(id);
 	} catch (e) {
 		return Promise.reject(e.message);
 	}
