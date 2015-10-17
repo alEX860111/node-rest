@@ -9,14 +9,14 @@ app.use(bodyParser.json());
 
 app.post("/products", function(req, res) {
 	var product = req.body;
-	productDao.saveProduct(req.body).then(function() {
+	productDao.insertProduct(req.body).then(function() {
 		res.setHeader("Location", req.protocol + "://" + req.hostname + ":" + port + req.originalUrl + "/" + product._id);
 		res.status(201).end();
 	});
 });
 
 app.get("/products/:id", function(req, res) {
-	productDao.getProduct(req.params.id).then(function(product) {
+	productDao.findProduct(req.params.id).then(function(product) {
 		if (!product) {
 			res.status(404).end();
 		}
@@ -28,10 +28,21 @@ app.get("/products/:id", function(req, res) {
 });
 
 app.get("/products", function(req, res) {
-	productDao.getProducts().then(function(products) {
+	productDao.findProducts().then(function(products) {
 		res.setHeader("Content-Type", "application/json");
 		res.end(JSON.stringify(products));
 	});
-})
+});
+
+app.delete("/products/:id", function(req, res) {
+	productDao.deleteProduct(req.params.id).then(function(result) {
+		if (result.deletedCount === 0) {
+			res.status(404).end();
+		}
+		res.status(200).end();
+	}, function(errorMessage) {
+		res.status(400).end(errorMessage);
+	});
+});
 
 module.exports = app;

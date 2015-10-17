@@ -4,22 +4,38 @@ var databaseService = require("./databaseService");
 var database = databaseService.getDatabase();
 var collection = database.collection("products");
 
-module.exports.saveProduct = function(product) {
+function createId(id) {
+	try {
+		return ObjectID.createFromHexString(id);
+	} catch (e) {
+		return undefined;
+	}
+}
+
+module.exports.insertProduct = function(product) {
 	return collection.insert(product);
 };
 
-module.exports.getProduct = function(id) {
-	var objectID;
-	try {
-		objectID = ObjectID.createFromHexString(id);
-	} catch (e) {
-		return Promise.reject(e.message);
+module.exports.findProduct = function(id) {
+	var objectID = createId(id);
+	if (objectID) {
+		return collection.findOne({
+			"_id": objectID
+		});
 	}
-	return collection.findOne({
-		"_id": objectID
-	});
+	return Promise.reject("Invalid ID");
 };
 
-module.exports.getProducts = function() {
+module.exports.findProducts = function() {
 	return collection.find().toArray();
+};
+
+module.exports.deleteProduct = function(id) {
+	var objectID = createId(id);
+	if (objectID) {
+		return collection.deleteOne({
+			"_id": objectID
+		});
+	}
+	return Promise.reject("Invalid ID");
 };

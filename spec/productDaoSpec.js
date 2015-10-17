@@ -21,7 +21,7 @@ describe("productDao", function() {
 	});
 
 	beforeEach(function() {
-		collection = jasmine.createSpyObj("collection", ["insert", "findOne", "find"]);
+		collection = jasmine.createSpyObj("collection", ["insert", "findOne", "find", "deleteOne"]);
 	});
 
 	beforeEach(function() {
@@ -51,18 +51,18 @@ describe("productDao", function() {
 		collection.insert.and.returnValue(promise);
 		var product = {};
 
-		var result = productDaoSUT.saveProduct(product);
+		var result = productDaoSUT.insertProduct(product);
 
 		expect(result).toBe(promise);
 		expect(collection.insert).toHaveBeenCalledWith(product);
 	});
 
 	describe("getProduct", function() {
-		it("should query the collection for a valid id", function() {
+		it("should find the product if the id is valid", function() {
 			ObjectID.createFromHexString.and.returnValue(42);
 			collection.findOne.and.returnValue(promise);
 
-			var result = productDaoSUT.getProduct("id");
+			var result = productDaoSUT.findProduct("id");
 
 			expect(result).toBe(promise);
 			expect(ObjectID.createFromHexString).toHaveBeenCalledWith("id");
@@ -70,13 +70,13 @@ describe("productDao", function() {
 				"_id": 42
 			});
 		});
-		it("should not query the collection for an invalid id", function(done) {
-			ObjectID.createFromHexString.and.throwError("error message");
+		it("should not find the product if the id is invalid", function(done) {
+			ObjectID.createFromHexString.and.throwError();
 
-			var result = productDaoSUT.getProduct("id");
+			var result = productDaoSUT.findProduct("id");
 
 			result.then(null, function(msg) {
-				expect(msg).toEqual("error message");
+				expect(msg).toEqual("Invalid ID");
 				done();
 			});
 			expect(ObjectID.createFromHexString).toHaveBeenCalledWith("id");
@@ -87,11 +87,38 @@ describe("productDao", function() {
 	it("getProducts", function() {
 		collection.find.and.returnValue(cursor);
 
-		var result = productDaoSUT.getProducts();
+		var result = productDaoSUT.findProducts();
 
 		expect(result).toBe(promise);
 		expect(collection.find).toHaveBeenCalled();
 		expect(cursor.toArray).toHaveBeenCalled();
+	});
+
+	describe("deleteProduct", function() {
+		it("should delete the product if the id is valid", function() {
+			ObjectID.createFromHexString.and.returnValue(42);
+			collection.deleteOne.and.returnValue(promise);
+
+			var result = productDaoSUT.deleteProduct("id");
+
+			expect(result).toBe(promise);
+			expect(ObjectID.createFromHexString).toHaveBeenCalledWith("id");
+			expect(collection.deleteOne).toHaveBeenCalledWith({
+				"_id": 42
+			});
+		});
+		it("should not delete the product if the id is invalid", function(done) {
+			ObjectID.createFromHexString.and.throwError();
+
+			var result = productDaoSUT.deleteProduct("id");
+
+			result.then(null, function(msg) {
+				expect(msg).toEqual("Invalid ID");
+				done();
+			});
+			expect(ObjectID.createFromHexString).toHaveBeenCalledWith("id");
+			expect(collection.deleteOne).not.toHaveBeenCalled();
+		});
 	});
 
 });
