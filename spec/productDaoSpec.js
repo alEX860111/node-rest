@@ -35,7 +35,7 @@ describe("productDao", function() {
 	});
 
 	beforeEach(function() {
-		var proxyquire = require("proxyquire");
+		var proxyquire = require("proxyquire").noCallThru();
 		productDaoSUT = proxyquire("../modules/productDao.js", {
 			"mongodb": mongodb,
 			"./databaseService": databaseService

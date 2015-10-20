@@ -11,7 +11,8 @@
 	},
 	"devDependencies": {
 		"jasmine": "2.3.x",
-		"proxyquire": "1.7.x"
+		"proxyquire": "1.7.x",
+		"supertest": "1.1.x"
 	},
 	"scripts": {
 		"test": "node node_modules/jasmine/bin/jasmine"
