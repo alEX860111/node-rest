@@ -2,16 +2,20 @@ var productDao = require("./productDao");
 
 var express = require("express");
 var app = express();
-const port = require("./conf").port;
 
 var bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
+app.locals.port = 3000;
+
 app.post("/products", function(req, res) {
-	var product = req.body;
-	productDao.insertProduct(req.body).then(function() {
-		res.setHeader("Location", req.protocol + "://" + req.hostname + ":" + port + req.originalUrl + "/" + product._id);
+	productDao.insertProduct(req.body).then(function(product) {
+		res.setHeader("Location", req.protocol + "://" + req.hostname + ":" + app.locals.port + req.originalUrl + "/" + product._id);
 		res.status(201).end();
+	}, function(error) {
+		console.log(error);
+		res.status(400);
+		res.end(error.message);
 	});
 });
 

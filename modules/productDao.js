@@ -1,41 +1,23 @@
-var ObjectID = require("mongodb").ObjectID;
-var databaseService = require("./databaseService");
-
-var database = databaseService.getDatabase();
-var collection = database.collection("products");
-
-function createId(id) {
-	try {
-		return ObjectID.createFromHexString(id);
-	} catch (e) {
-		return undefined;
+var mongoose = require("mongoose");
+var Product = mongoose.model("Product", {
+	name: {
+		type: String,
+		required: true
 	}
-}
+});
 
 module.exports.insertProduct = function(product) {
-	return collection.insert(product);
+	return new Product(product).save();
 };
 
 module.exports.findProduct = function(id) {
-	var objectID = createId(id);
-	if (objectID) {
-		return collection.findOne({
-			"_id": objectID
-		});
-	}
-	return Promise.reject("Invalid ID");
+	return Product.findById(id).exec();
 };
 
 module.exports.findProducts = function() {
-	return collection.find().toArray();
+	return Product.find().exec();
 };
 
 module.exports.deleteProduct = function(id) {
-	var objectID = createId(id);
-	if (objectID) {
-		return collection.deleteOne({
-			"_id": objectID
-		});
-	}
-	return Promise.reject("Invalid ID");
+	return Product.findByIdAndRemove(id).exec();
 };
