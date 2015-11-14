@@ -11,8 +11,11 @@ describe("app", function() {
 
 	beforeEach(function() {
 		var proxyquire = require("proxyquire").noCallThru();
-		appSUT = proxyquire("../modules/app.js", {
-			"./productDao": productDao
+		var product = proxyquire("../modules/routes/product", {
+			"../productDao": productDao
+		});
+		appSUT = proxyquire("../modules/app", {
+			"./routes/product": product
 		});
 	});
 
