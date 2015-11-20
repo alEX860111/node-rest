@@ -1,42 +1,42 @@
 var productDao = require("../productDao");
 
-module.exports.insert = function(req, res) {
+module.exports.insert = function(req, res, next) {
 	productDao.insertProduct(req.body).then(function(product) {
 		res.setHeader("Location", req.protocol + "://" + req.headers.host + req.originalUrl + "/" + product._id);
 		res.status(201).end();
 	}, function(error) {
-		console.log(error);
-		res.status(400);
-		res.end(error.message);
+		next(error);
 	});
 };
 
-module.exports.find = function(req, res) {
+module.exports.find = function(req, res, next) {
 	productDao.findProduct(req.params.id).then(function(product) {
 		if (!product) {
 			res.status(404).end();
 		}
 		res.setHeader("Content-Type", "application/json");
 		res.end(JSON.stringify(product));
-	}, function(errorMessage) {
-		res.status(400).end(errorMessage);
+	}, function(error) {
+		next(error);
 	});
 };
 
-module.exports.findAll = function(req, res) {
+module.exports.findAll = function(req, res, next) {
 	productDao.findProducts().then(function(products) {
 		res.setHeader("Content-Type", "application/json");
 		res.end(JSON.stringify(products));
+	}, function(error) {
+		next(error);
 	});
 };
 
-module.exports.delete = function(req, res) {
-	productDao.deleteProduct(req.params.id).then(function(result) {
-		if (result.deletedCount === 0) {
-			res.status(404).end();
+module.exports.delete = function(req, res, next) {
+	productDao.deleteProduct(req.params.id).then(function(product) {
+		if (product) {
+			res.status(200).end();
 		}
-		res.status(200).end();
-	}, function(errorMessage) {
-		res.status(400).end(errorMessage);
+		res.status(404).end();
+	}, function(error) {
+		next(error);
 	});
 };

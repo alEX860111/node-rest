@@ -58,10 +58,10 @@ describe("app", function() {
 				.get("/products/1")
 				.end(function(err, res) {
 					expect(err).toEqual(null);
-					expect(res.status).toEqual(400);
+					expect(res.status).toEqual(500);
 					expect(res.headers["content-type"]).toBeUndefined();
 					expect(res.body).toEqual({});
-					expect(res.text).toEqual("my error");
+					expect(res.text).toEqual("Internal Server Error");
 					expect(productDao.findProduct).toHaveBeenCalledWith("1");
 					done();
 				});
